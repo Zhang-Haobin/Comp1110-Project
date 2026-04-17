@@ -48,6 +48,4 @@ void dijkstra(int cmatrix[][10], int start, int end) {
         cout << path[i];
         if (i > 0) cout << " -> ";
     }
-    cout << endl;
-    cout << "shortest distance：" << dis[end] << endl;
 }
