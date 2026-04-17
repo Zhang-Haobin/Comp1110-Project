@@ -1,10 +1,10 @@
 #include <iostream>
 #include <climits>
-
+#include <string>
 using namespace std;
 
 int dis[10], check[10], prevNode[10];   
-
+string result;
 void dijkstra(int cmatrix[][10], int start, int end) {
 
     for (int i = 0; i < 10; i++) {          //初始化
@@ -45,7 +45,9 @@ void dijkstra(int cmatrix[][10], int start, int end) {
     }
 
     for (int i = index - 1; i >= 0; i--) {     //倒着把path输出一遍就是路径
-        cout << path[i];
-        if (i > 0) cout << " -> ";
+        string r;
+        r = path[i];
+        result += r;
     }
+    return r;
 }
