@@ -1,7 +1,7 @@
 #ifndef DIJKSTRA_H
 #define DIJKSTRA_H
 
-int dijkstra(
+string dijkstra(int cmatrix[][10], int start, int end)
 
 
 #endif
