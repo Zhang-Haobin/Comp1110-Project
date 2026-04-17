@@ -1,6 +1,7 @@
 #include <iostream>
 #include <climits>
 #include <string>
+#include <dijkstra.h>
 using namespace std;
 
 int dis[10], check[10], prevNode[10];   
