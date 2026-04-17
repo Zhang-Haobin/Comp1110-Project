@@ -6,7 +6,7 @@ using namespace std;
 
 int dis[10], check[10], prevNode[10];   
 string result;
-void dijkstra(int cmatrix[][10], int start, int end) {
+string dijkstra(int cmatrix[][10], int start, int end) {
 
     for (int i = 0; i < 10; i++) {          //初始化
         dis[i] = INT_MAX;
