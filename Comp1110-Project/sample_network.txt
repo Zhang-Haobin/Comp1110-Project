@@ -1,0 +1,20 @@
+# from,to,mode,duration,cost
+Sham Shui Po,Mong Kok,MTR,4,4.8
+Sham Shui Po,Mong Kok,Walk,20,0.0
+Mong Kok,Tsim Sha Tsui,MTR,6,5.7
+Mong Kok,Tsim Sha Tsui,Bus,15,5.4
+Mong Kok,Kowloon Tong,MTR,6,5.7
+Kowloon Tong,Hung Hom,MTR,7,6.5
+Kowloon Tong,Wong Tai Sin,MTR,5,4.8
+Wong Tai Sin,Kwun Tong,MTR,10,7.1
+Mong Kok,Kwun Tong,Red Minibus,25,12.0
+Tsim Sha Tsui,Hung Hom,Walk,15,0.0
+Tsim Sha Tsui,Central,Ferry,10,4.0
+Tsim Sha Tsui,Admiralty,MTR,5,10.5
+Hung Hom,Admiralty,MTR,5,10.5
+Hung Hom,HKU,Cross Bus,40,16.0
+Central,Admiralty,MTR,2,4.8
+Central,Admiralty,Walk,15,0.0
+Central,HKU,MTR,7,5.7
+Central,HKU,Bus,15,6.2
+Admiralty,HKU,MTR,8,5.7
