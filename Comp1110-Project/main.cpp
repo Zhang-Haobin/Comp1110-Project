@@ -9,8 +9,6 @@
 #include "dijkstra.h"
 
 namespace {
-const std::string kMapImagePath =
-    "/Users/tonyzhang/Downloads/comp1110/mermaid-diagram-2026-03-23-160732.png";
 const std::string kDefaultNetworkFile = "sample_network.txt";
 
 void printDivider() {
@@ -54,11 +52,6 @@ void printWelcome(const TransportNetwork& network) {
     std::cout << "           Hong Kong Transport Route Planner\n";
     printDivider();
     std::cout << "Map image: ";
-    if (std::filesystem::exists(kMapImagePath)) {
-        std::cout << kMapImagePath << '\n';
-    } else {
-        std::cout << "not found\n";
-    }
     std::cout << "Stops loaded: " << network.getStopCount() << '\n';
     std::cout << "Segments loaded: " << network.getSegmentCount() << '\n';
     printDivider();
