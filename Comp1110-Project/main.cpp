@@ -1,4 +1,4 @@
-#include <filesystem>
+#include <algorithm>
 #include <iomanip>
 #include <iostream>
 #include <limits>
@@ -9,7 +9,16 @@
 #include "dijkstra.h"
 
 namespace {
-const std::string kDefaultNetworkFile = "sample_network.txt";
+struct ScenarioDefinition {
+    std::string title;
+    std::string goal;
+    std::string networkLayout;
+    std::string origin;
+    std::string destination;
+    int preferenceMode;
+    bool useBudgetLimit;
+    double budgetLimit;
+};
 
 void printDivider() {
     std::cout << "============================================================\n";
@@ -37,6 +46,21 @@ int readInt(const std::string& prompt) {
     }
 }
 
+double readDouble(const std::string& prompt) {
+    double value = 0.0;
+    while (true) {
+        std::cout << prompt;
+        if (std::cin >> value) {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return value;
+        }
+
+        std::cout << "Invalid number. Please try again.\n";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+}
+
 std::string preferenceName(int mode) {
     if (mode == 1) {
         return "Fastest";
@@ -51,7 +75,6 @@ void printWelcome(const TransportNetwork& network) {
     printDivider();
     std::cout << "           Hong Kong Transport Route Planner\n";
     printDivider();
-    std::cout << "Map image: ";
     std::cout << "Stops loaded: " << network.getStopCount() << '\n';
     std::cout << "Segments loaded: " << network.getSegmentCount() << '\n';
     printDivider();
@@ -61,8 +84,10 @@ void printMainMenu() {
     std::cout << "1. List all stops\n";
     std::cout << "2. Query journeys\n";
     std::cout << "3. Show network summary\n";
-    std::cout << "4. Load network from file\n";
-    std::cout << "5. Exit\n";
+    std::cout << "4. Load sample network\n";
+    std::cout << "5. Load network from custom file\n";
+    std::cout << "6. Scenario / Case Study Mode\n";
+    std::cout << "7. Exit\n";
 }
 
 void listStops(const TransportNetwork& network) {
@@ -115,6 +140,69 @@ void printJourney(const PathResult& result, int index) {
     std::cout << "------------------------------------------------------------\n";
 }
 
+bool validateJourneyInput(const TransportNetwork& network, const std::string& startStation,
+                          const std::string& endStation) {
+    if (!network.hasStation(startStation) || !network.hasStation(endStation)) {
+        std::cout << "Unknown station name. Please choose from the loaded network.\n";
+        printDivider();
+        return false;
+    }
+
+    if (startStation == endStation) {
+        std::cout << "Start and destination cannot be the same.\n";
+        printDivider();
+        return false;
+    }
+
+    return true;
+}
+
+std::vector<PathResult> collectRankedJourneys(const TransportNetwork& network,
+                                              const std::string& startStation,
+                                              const std::string& endStation, int mode,
+                                              bool useBudgetLimit = false,
+                                              double budgetLimit = 0.0) {
+    std::vector<PathResult> journeys =
+        generateCandidateJourneys(network, startStation, endStation, 6, 20);
+
+    if (useBudgetLimit) {
+        journeys.erase(std::remove_if(journeys.begin(), journeys.end(),
+                                      [budgetLimit](const PathResult& result) {
+                                          return result.totalCost > budgetLimit;
+                                      }),
+                       journeys.end());
+    }
+
+    rankJourneys(journeys, mode);
+    return journeys;
+}
+
+void printTopJourneys(const std::vector<PathResult>& journeys, int limit = 3) {
+    int topCount = static_cast<int>(journeys.size());
+    if (topCount > limit) {
+        topCount = limit;
+    }
+
+    for (int i = 0; i < topCount; ++i) {
+        printJourney(journeys[i], i + 1);
+    }
+}
+
+void printScenarioSummary(const ScenarioDefinition& scenario) {
+    printDivider();
+    std::cout << "Scenario: " << scenario.title << '\n';
+    std::cout << "Goal: " << scenario.goal << '\n';
+    std::cout << "Network layout: " << scenario.networkLayout << '\n';
+    std::cout << "Origin: " << scenario.origin << '\n';
+    std::cout << "Destination: " << scenario.destination << '\n';
+    std::cout << "Preference: " << preferenceName(scenario.preferenceMode) << '\n';
+    if (scenario.useBudgetLimit) {
+        std::cout << "Budget limit: $" << std::fixed << std::setprecision(1)
+                  << scenario.budgetLimit << '\n';
+    }
+    printDivider();
+}
+
 void queryJourneys(const TransportNetwork& network) {
     printDivider();
     std::cout << "Journey Query\n";
@@ -123,15 +211,7 @@ void queryJourneys(const TransportNetwork& network) {
     std::string startStation = readLine("Enter start station: ");
     std::string endStation = readLine("Enter destination: ");
 
-    if (!network.hasStation(startStation) || !network.hasStation(endStation)) {
-        std::cout << "Unknown station name. Please choose from the loaded network.\n";
-        printDivider();
-        return;
-    }
-
-    if (startStation == endStation) {
-        std::cout << "Start and destination cannot be the same.\n";
-        printDivider();
+    if (!validateJourneyInput(network, startStation, endStation)) {
         return;
     }
 
@@ -148,7 +228,7 @@ void queryJourneys(const TransportNetwork& network) {
     }
 
     std::vector<PathResult> journeys =
-        generateCandidateJourneys(network, startStation, endStation, 6, 12);
+        collectRankedJourneys(network, startStation, endStation, mode);
 
     if (journeys.empty()) {
         std::cout << "No candidate journeys found with the current search limit.\n";
@@ -162,14 +242,7 @@ void queryJourneys(const TransportNetwork& network) {
     std::cout << "Top ranked candidate journeys:\n";
     std::cout << "------------------------------------------------------------\n";
 
-    int topCount = static_cast<int>(journeys.size());
-    if (topCount > 3) {
-        topCount = 3;
-    }
-
-    for (int i = 0; i < topCount; ++i) {
-        printJourney(journeys[i], i + 1);
-    }
+    printTopJourneys(journeys);
 
     if (mode == 1 || mode == 2) {
         bool optimizeByTime = (mode == 1);
@@ -190,23 +263,176 @@ void loadNetwork(TransportNetwork& network) {
         return;
     }
 
-    if (network.loadFromFile(filename)) {
+    std::string message;
+    if (network.loadFromFile(filename, &message)) {
         std::cout << "Network loaded successfully from: " << filename << '\n';
         std::cout << "Stops loaded: " << network.getStopCount() << '\n';
         std::cout << "Segments loaded: " << network.getSegmentCount() << '\n';
+        if (!message.empty()) {
+            std::cout << message << '\n';
+        }
     } else {
-        std::cout << "Failed to load network file. Check that the file exists and is not empty.\n";
+        std::cout << "Failed to load network file.\n";
+        if (!message.empty()) {
+            std::cout << message << '\n';
+        }
         std::cout << "Expected format: stop1,stop2,mode,duration,cost\n";
     }
+    printDivider();
+}
+
+void printScenarioMenu() {
+    std::cout << "1. Budget commuter\n";
+    std::cout << "2. Last-minute student\n";
+    std::cout << "3. Transfer-averse user\n";
+    std::cout << "4. Budget-capped office commuter\n";
+    std::cout << "5. Custom budget query\n";
+    std::cout << "6. Return to main menu\n";
+}
+
+void runPredefinedScenario(const TransportNetwork& network, const ScenarioDefinition& scenario) {
+    printScenarioSummary(scenario);
+
+    if (!validateJourneyInput(network, scenario.origin, scenario.destination)) {
+        return;
+    }
+
+    std::vector<PathResult> journeys = collectRankedJourneys(
+        network, scenario.origin, scenario.destination, scenario.preferenceMode,
+        scenario.useBudgetLimit, scenario.budgetLimit);
+
+    if (journeys.empty()) {
+        std::cout << "No candidate journeys matched this scenario.\n";
+        if (scenario.useBudgetLimit) {
+            std::cout << "Try increasing the budget limit or adjusting the route.\n";
+        }
+        printDivider();
+        return;
+    }
+
+    std::cout << "Scenario results:\n";
+    std::cout << "------------------------------------------------------------\n";
+    printTopJourneys(journeys);
+    printDivider();
+}
+
+void runCustomBudgetQuery(const TransportNetwork& network) {
+    printDivider();
+    std::cout << "Custom Budget Query\n";
+    printDivider();
+
+    std::string startStation = readLine("Enter start station: ");
+    std::string endStation = readLine("Enter destination: ");
+
+    if (!validateJourneyInput(network, startStation, endStation)) {
+        return;
+    }
+
+    std::cout << "Choose ranking mode under your budget:\n";
+    std::cout << "1. Fastest within budget\n";
+    std::cout << "2. Cheapest within budget\n";
+    std::cout << "3. Fewest segments within budget\n";
+    int mode = readInt("Your choice: ");
+    if (mode < 1 || mode > 3) {
+        std::cout << "Invalid preference mode.\n";
+        printDivider();
+        return;
+    }
+
+    double budgetLimit = readDouble("Enter maximum budget: $");
+    if (budgetLimit < 0.0) {
+        std::cout << "Budget cannot be negative.\n";
+        printDivider();
+        return;
+    }
+
+    std::vector<PathResult> journeys =
+        collectRankedJourneys(network, startStation, endStation, mode, true, budgetLimit);
+
+    if (journeys.empty()) {
+        std::cout << "No candidate journeys found within the budget limit of $"
+                  << std::fixed << std::setprecision(1) << budgetLimit << ".\n";
+        printDivider();
+        return;
+    }
+
+    std::cout << "Best journeys within budget $" << std::fixed << std::setprecision(1)
+              << budgetLimit << '\n';
+    std::cout << "Preference: " << preferenceName(mode) << '\n';
+    std::cout << "------------------------------------------------------------\n";
+    printTopJourneys(journeys);
+    printDivider();
+}
+
+void runScenarioMode(const TransportNetwork& network) {
+    const std::vector<ScenarioDefinition> scenarios = {
+        {"Budget commuter",
+         "Find the fastest journey without spending more than a modest budget.",
+         "Built-in Hong Kong sample transport network",
+         "Sham Shui Po",
+         "HKU",
+         1,
+         true,
+         25.0},
+        {"Last-minute student",
+         "Reach campus as quickly as possible, even if the route costs more.",
+         "Built-in Hong Kong sample transport network",
+         "Sham Shui Po",
+         "HKU",
+         1,
+         false,
+         0.0},
+        {"Transfer-averse user",
+         "Prefer routes with fewer segments to reduce transfers and confusion.",
+         "Built-in Hong Kong sample transport network",
+         "Sham Shui Po",
+         "HKU",
+         3,
+         false,
+         0.0},
+        {"Budget-capped office commuter",
+         "Travel to the office as quickly as possible while staying below a fixed budget.",
+         "Built-in Hong Kong sample transport network",
+         "Kwun Tong",
+         "Central",
+         1,
+         true,
+         30.0}
+    };
+
+    bool running = true;
+    while (running) {
+        printDivider();
+        std::cout << "Scenario / Case Study Mode\n";
+        printDivider();
+        printScenarioMenu();
+        int choice = readInt("Choose a scenario: ");
+
+        if (choice >= 1 && choice <= 4) {
+            runPredefinedScenario(network, scenarios[choice - 1]);
+        } else if (choice == 5) {
+            runCustomBudgetQuery(network);
+        } else if (choice == 6) {
+            running = false;
+        } else {
+            std::cout << "Invalid scenario choice.\n";
+            printDivider();
+        }
+    }
+}
+
+void loadDefaultNetwork(TransportNetwork& network) {
+    network.buildMap();
+    std::cout << "Sample network loaded successfully.\n";
+    std::cout << "Stops loaded: " << network.getStopCount() << '\n';
+    std::cout << "Segments loaded: " << network.getSegmentCount() << '\n';
     printDivider();
 }
 }
 
 int main() {
     TransportNetwork network;
-    if (!network.loadFromFile(kDefaultNetworkFile)) {
-        network.buildMap();
-    }
+    network.buildMap();
 
     printWelcome(network);
 
@@ -222,8 +448,12 @@ int main() {
         } else if (choice == 3) {
             showNetworkSummary(network);
         } else if (choice == 4) {
-            loadNetwork(network);
+            loadDefaultNetwork(network);
         } else if (choice == 5) {
+            loadNetwork(network);
+        } else if (choice == 6) {
+            runScenarioMode(network);
+        } else if (choice == 7) {
             running = false;
             std::cout << "Thank you for using the Transport App. Goodbye!\n";
         } else {

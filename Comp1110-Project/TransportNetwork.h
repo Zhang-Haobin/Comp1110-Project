@@ -21,7 +21,7 @@ public:
                             const std::string& mode, int duration, double cost);
     void clear();
     void buildMap();
-    bool loadFromFile(const std::string& filename);
+    bool loadFromFile(const std::string& filename, std::string* errorMessage = nullptr);
     bool hasStation(const std::string& station) const;
     const std::vector<Segment>& getNeighbors(const std::string& station) const;
     std::vector<std::string> getStations() const;
@@ -30,6 +30,7 @@ public:
 
 private:
     std::unordered_map<std::string, std::vector<Segment>> adjList;
+    std::size_t logicalSegmentCount = 0;
 };
 
 #endif
