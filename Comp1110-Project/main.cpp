@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <iostream>
 #include <limits>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -22,6 +23,10 @@ struct ScenarioDefinition {
 
 void printDivider() {
     std::cout << "============================================================\n";
+}
+
+void printRegionSeparator() {
+    std::cout << "=======================\n";
 }
 
 std::string readLine(const std::string& prompt) {
@@ -71,6 +76,86 @@ std::string preferenceName(int mode) {
     return "Fewest Segments";
 }
 
+std::string stationRegion(const std::string& station) {
+    if (station == "Sham Shui Po" || station == "Mong Kok" ||
+        station == "Tsim Sha Tsui" || station == "Kowloon Tong" ||
+        station == "Hung Hom" || station == "Wong Tai Sin" ||
+        station == "Kwun Tong") {
+        return "Kowloon";
+    }
+
+    if (station == "Central" || station == "Admiralty" || station == "HKU") {
+        return "Hong Kong Island";
+    }
+
+    if (station == "Sha Tin") {
+        return "New Territories";
+    }
+
+    if (station == "Airport") {
+        return "Airport Area";
+    }
+
+    return "Other Areas";
+}
+
+void printStopsForRegion(const std::vector<std::string>& stations, const std::string& region,
+                         std::size_t& stopNumber) {
+    std::cout << region << '\n';
+    bool hasStops = false;
+    for (const std::string& station : stations) {
+        if (stationRegion(station) == region) {
+            std::cout << stopNumber << ". [" << region << "] " << station << '\n';
+            ++stopNumber;
+            hasStops = true;
+        }
+    }
+
+    if (!hasStops) {
+        std::cout << "No stops in this region.\n";
+    }
+}
+
+bool hasStopsInRegion(const std::vector<std::string>& stations, const std::string& region) {
+    for (const std::string& station : stations) {
+        if (stationRegion(station) == region) {
+            return true;
+        }
+    }
+    return false;
+}
+
+int countStopsInRegion(const std::vector<std::string>& stations, const std::string& region) {
+    int count = 0;
+    for (const std::string& station : stations) {
+        if (stationRegion(station) == region) {
+            ++count;
+        }
+    }
+    return count;
+}
+
+std::vector<std::string> collectTravelModes(const TransportNetwork& network) {
+    std::set<std::string> modeSet;
+    for (const std::string& station : network.getStations()) {
+        const std::vector<Segment>& neighbors = network.getNeighbors(station);
+        for (const Segment& segment : neighbors) {
+            modeSet.insert(segment.mode);
+        }
+    }
+    return std::vector<std::string>(modeSet.begin(), modeSet.end());
+}
+
+void printCommaSeparated(const std::vector<std::string>& values) {
+    for (std::size_t i = 0; i < values.size(); ++i) {
+        if (i > 0) {
+            std::cout << ", ";
+        }
+        std::cout << values[i];
+    }
+    std::cout << '\n';
+}
+
 void printWelcome(const TransportNetwork& network) {
     printDivider();
     std::cout << "           Hong Kong Transport Route Planner\n";
@@ -95,9 +180,27 @@ void listStops(const TransportNetwork& network) {
     std::cout << "All Stops\n";
     printDivider();
     std::vector<std::string> stations = network.getStations();
-    for (std::size_t i = 0; i < stations.size(); ++i) {
-        std::cout << i + 1 << ". " << stations[i] << '\n';
+    std::size_t stopNumber = 1;
+    const std::vector<std::string> regions = {
+        "Kowloon",
+        "Hong Kong Island",
+        "New Territories",
+        "Airport Area",
+        "Other Areas"
+    };
+
+    bool printedRegion = false;
+    for (const std::string& region : regions) {
+        if (!hasStopsInRegion(stations, region)) {
+            continue;
+        }
+        if (printedRegion) {
+            printRegionSeparator();
+        }
+        printStopsForRegion(stations, region, stopNumber);
+        printedRegion = true;
     }
+
     printDivider();
 }
 
@@ -107,6 +210,25 @@ void showNetworkSummary(const TransportNetwork& network) {
     printDivider();
     std::cout << "Total stops: " << network.getStopCount() << '\n';
     std::cout << "Total segments: " << network.getSegmentCount() << '\n';
+    std::vector<std::string> modes = collectTravelModes(network);
+    std::cout << "Travel modes: ";
+    printCommaSeparated(modes);
+
+    std::vector<std::string> stations = network.getStations();
+    std::cout << "Region breakdown:\n";
+    const std::vector<std::string> regions = {
+        "Kowloon",
+        "Hong Kong Island",
+        "New Territories",
+        "Airport Area",
+        "Other Areas"
+    };
+    for (const std::string& region : regions) {
+        int count = countStopsInRegion(stations, region);
+        if (count > 0) {
+            std::cout << "  " << region << ": " << count << " stops\n";
+        }
+    }
     printDivider();
 }
 
@@ -163,7 +285,7 @@ std::vector<PathResult> collectRankedJourneys(const TransportNetwork& network,
                                               bool useBudgetLimit = false,
                                               double budgetLimit = 0.0) {
     std::vector<PathResult> journeys =
-        generateCandidateJourneys(network, startStation, endStation, 6, 20);
+        generateCandidateJourneys(network, startStation, endStation, 7, 1000);
 
     if (useBudgetLimit) {
         journeys.erase(std::remove_if(journeys.begin(), journeys.end(),

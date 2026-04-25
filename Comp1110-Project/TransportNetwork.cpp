@@ -60,9 +60,13 @@ void TransportNetwork::buildMap() {
     addBidirectionalSegment("Kowloon Tong", "Hung Hom", "MTR", 7, 6.5);
     addBidirectionalSegment("Kowloon Tong", "Wong Tai Sin", "MTR", 5, 4.8);
     addBidirectionalSegment("Wong Tai Sin", "Kwun Tong", "MTR", 10, 7.1);
+    addBidirectionalSegment("Sha Tin", "Mong Kok", "MTR", 20, 12.0);
+    addBidirectionalSegment("Sha Tin", "Sham Shui Po", "MTR", 15, 12.0);
+    addBidirectionalSegment("Sha Tin", "Kowloon Tong", "MTR", 8, 8.0);
 
     addBidirectionalSegment("Mong Kok", "Kwun Tong", "Red Minibus", 25, 12.0);
     addBidirectionalSegment("Tsim Sha Tsui", "Hung Hom", "Walk", 15, 0.0);
+    addBidirectionalSegment("Airport", "Tsim Sha Tsui", "MTR", 40, 40.0);
 
     addBidirectionalSegment("Tsim Sha Tsui", "Central", "Ferry", 10, 4.0);
     addBidirectionalSegment("Tsim Sha Tsui", "Admiralty", "MTR", 5, 10.5);
