@@ -29,6 +29,7 @@ Makefile
     Used to compile the program.
 
 
+
 2. How to Compile
 -----------------
 
@@ -47,6 +48,7 @@ This creates an executable file called:
 If you want to remove compiled files, run:
 
     make clean
+
 
 
 3. How to Run
@@ -70,6 +72,7 @@ The program will show this main menu:
     7. Exit
 
 Type the menu number and press Enter.
+
 
 
 4. Menu Guide
@@ -157,6 +160,7 @@ Option 7: Exit
     Closes the program.
 
 
+
 5. Valid Station Names in the Built-In Network
 ----------------------------------------------
 
@@ -177,6 +181,7 @@ Use station names exactly as written below:
 
 The program checks for unknown station names. If the name is not in the loaded
 network, it will ask the user to choose from the loaded network.
+
 
 
 6. Notes About Route Results
@@ -201,6 +206,7 @@ Budget scenarios:
     The remaining journeys are ranked according to the scenario preference.
 
 
+
 7. Common Problems
 ------------------
 
@@ -219,6 +225,7 @@ Problem: "Failed to load network file."
 
 Problem: "Invalid preference mode" or "Invalid menu choice."
     Enter one of the numbers shown in the menu.
+
 
 
 8. Example Full Run
