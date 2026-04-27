@@ -6,6 +6,20 @@ Hong Kong sample transport network and lets the user compare journeys by time,
 cost, number of route segments, and simple scenario settings.
 
 
+
+0. Enviroment
+----------------
+
+Programming language: C++
+Standard: C++11
+Compiler: g++ or any compiler supporting C++11
+Build tool: Make
+Operating system: macOS / Linux / Windows with a C++ compiler
+Interface: Command-line terminal
+External libraries: None
+
+
+
 1. Project Files
 ----------------
 
