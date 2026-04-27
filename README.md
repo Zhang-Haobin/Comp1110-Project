@@ -105,6 +105,12 @@ Option 3: Show network summary
     In the built-in sample network, the program reports:
         Stops loaded: 12
         Segments loaded: 23
+        Travel modes: Bus, Cross Bus, Ferry, MTR, Red Minibus, Walk
+        Region breakdown:
+          Kowloon: 7 stops
+          Hong Kong Island: 3 stops
+          New Territories: 1 stops
+          Airport Area: 1 stops
 
 Option 4: Load sample network
     Reloads the built-in sample network from buildMap(). Use this if you loaded
