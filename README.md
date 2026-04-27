@@ -87,8 +87,8 @@ Option 2: Query journeys
         2. Cheapest
         3. Fewest segments
 
-    The program prints the top ranked candidate journeys. For Fastest and
-    Cheapest queries, it also prints a Dijkstra Reference Result.
+The program prints the top ranked candidate journeys. For Fastest and
+Cheapest queries, it also prints a Dijkstra Reference Result.
 
     Example input:
         Enter start station: Sham Shui Po
