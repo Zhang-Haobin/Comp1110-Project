@@ -6,6 +6,26 @@ Hong Kong sample transport network and lets the user compare journeys by time,
 cost, number of route segments, and simple scenario settings.
 
 
+
+0. Enviroment
+----------------
+
+Programming language: C++
+
+Standard: C++11
+
+Compiler: g++ or any compiler supporting C++11
+
+Build tool: Make
+
+Operating system: macOS / .]Linux / Windows with a C++ compiler
+
+Interface: Command-line terminal
+
+External libraries: None
+
+
+
 1. Project Files
 ----------------
 
@@ -29,6 +49,7 @@ Makefile
     Used to compile the program.
 
 
+
 2. How to Compile
 -----------------
 
@@ -47,6 +68,7 @@ This creates an executable file called:
 If you want to remove compiled files, run:
 
     make clean
+
 
 
 3. How to Run
@@ -72,6 +94,7 @@ The program will show this main menu:
 Type the menu number and press Enter.
 
 
+
 4. Menu Guide
 -------------
 
@@ -87,8 +110,8 @@ Option 2: Query journeys
         2. Cheapest
         3. Fewest segments
 
-    The program prints the top ranked candidate journeys. For Fastest and
-    Cheapest queries, it also prints a Dijkstra Reference Result.
+The program prints the top ranked candidate journeys. For Fastest and
+Cheapest queries, it also prints a Dijkstra Reference Result.
 
     Example input:
         Enter start station: Sham Shui Po
@@ -105,6 +128,12 @@ Option 3: Show network summary
     In the built-in sample network, the program reports:
         Stops loaded: 12
         Segments loaded: 23
+        Travel modes: Bus, Cross Bus, Ferry, MTR, Red Minibus, Walk
+        Region breakdown:
+          Kowloon: 7 stops
+          Hong Kong Island: 3 stops
+          New Territories: 1 stops
+          Airport Area: 1 stops
 
 Option 4: Load sample network
     Reloads the built-in sample network from buildMap(). Use this if you loaded
@@ -151,6 +180,7 @@ Option 7: Exit
     Closes the program.
 
 
+
 5. Valid Station Names in the Built-In Network
 ----------------------------------------------
 
@@ -171,6 +201,7 @@ Use station names exactly as written below:
 
 The program checks for unknown station names. If the name is not in the loaded
 network, it will ask the user to choose from the loaded network.
+
 
 
 6. Notes About Route Results
@@ -195,6 +226,7 @@ Budget scenarios:
     The remaining journeys are ranked according to the scenario preference.
 
 
+
 7. Common Problems
 ------------------
 
@@ -213,6 +245,7 @@ Problem: "Failed to load network file."
 
 Problem: "Invalid preference mode" or "Invalid menu choice."
     Enter one of the numbers shown in the menu.
+
 
 
 8. Example Full Run
