@@ -16,7 +16,7 @@ Airport,Tsim Sha Tsui,MTR,40,40.0
 Tsim Sha Tsui,Central,Ferry,10,4.0
 Tsim Sha Tsui,Admiralty,MTR,5,10.5
 Hung Hom,Admiralty,MTR,5,10.5
-Hung Hom,HKU,Cross Bus,40,16.0
+Kwun Tong,HKU,Cross Bus,40,16.0
 Central,Admiralty,MTR,2,4.8
 Central,Admiralty,Walk,15,0.0
 Central,HKU,MTR,7,5.7
