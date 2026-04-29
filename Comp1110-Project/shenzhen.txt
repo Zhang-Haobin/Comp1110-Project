@@ -1,0 +1,41 @@
+# from,to,mode,duration,cost
+Luohu,Laojie,Metro,4,2.0
+Luohu,Laojie,Walk,15,0.0
+Laojie,Grand Theater,Metro,3,2.0
+Grand Theater,Science Museum,Metro,3,2.0
+Science Museum,Huaqiangbei,Metro,4,2.0
+Science Museum,Huaqiangbei,Walk,12,0.0
+Huaqiangbei,Gangxia,Metro,5,2.0
+Gangxia,Convention & Exhibition Center,Metro,2,2.0
+Gangxia,Convention & Exhibition Center,Walk,10,0.0
+Convention & Exhibition Center,Shopping Park,Metro,2,2.0
+Convention & Exhibition Center,Shopping Park,Walk,10,0.0
+Convention & Exhibition Center,Futian,Metro,3,2.0
+Shopping Park,Chegongmiao,Metro,5,2.0
+Futian,Chegongmiao,Metro,4,2.0
+Chegongmiao,Window of the World,Metro,10,4.0
+Window of the World,Hi-Tech Park,Metro,4,2.0
+Window of the World,Hi-Tech Park,Bus,15,2.0
+Hi-Tech Park,Shenzhen University,Metro,3,2.0
+Shenzhen University,Houhai,Metro,6,2.0
+Shenzhen University,Houhai,Bus,15,2.0
+Houhai,Shenzhen Bay Port,Bus,15,2.0
+Houhai,Shenzhen Bay Port,Taxi,8,15.0
+Futian,Shenzhen North,Metro,12,4.0
+Chegongmiao,Shenzhen North,Metro,15,4.0
+Shenzhen North,Bantian,Metro,10,3.0
+Shenzhen North,Bantian,Bus,25,2.0
+Window of the World,Bao'an Center,Metro,15,5.0
+Bao'an Center,Shenzhen Airport,Metro,20,6.0
+Bao'an Center,Shenzhen Airport,Bus,40,2.0
+Shenzhen North,Shenzhen Airport,Metro,35,8.0
+Houhai,Shekou Port,Metro,15,4.0
+Shekou Port,Shenzhen Airport,Ferry,30,60.0
+Luohu,Grand Theater,Bus,10,2.0
+Futian,Shopping Park,Walk,8,0.0
+Chegongmiao,Bao'an Center,Metro,22,6.0
+Hi-Tech Park,Shenzhen Bay Port,Bus,20,2.0
+Laojie,Huaqiangbei,Metro,8,3.0
+Grand Theater,Futian,Metro,12,4.0
+Bao'an Center,Houhai,Metro,18,5.0
+Shenzhen University,Bao'an Center,Metro,15,4.0
