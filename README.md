@@ -18,7 +18,7 @@ Compiler: g++ or any compiler supporting C++11
 
 Build tool: Make
 
-Operating system: macOS / .]Linux / Windows with a C++ compiler
+Operating system: macOS / Linux / Windows with a C++ compiler
 
 Interface: Command-line terminal
 
