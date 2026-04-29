@@ -37,7 +37,7 @@ TransportNetwork.h / TransportNetwork.cpp
     Store the transport network as an adjacency list. They also provide the
     built-in sample map and the file-loading function.
 
-dijkstra.h / dijkstra.cpp
+Algorithm.h / Algorithm.cpp
     Contain route-search logic, candidate journey generation, route ranking,
     and Dijkstra's algorithm for fastest or cheapest reference paths.
 
