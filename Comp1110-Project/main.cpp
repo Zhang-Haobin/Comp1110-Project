@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "TransportNetwork.h"
-#include "dijkstra.h"
+#include "Algorithm.h"
 
 namespace {
 struct ScenarioDefinition {

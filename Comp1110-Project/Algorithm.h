@@ -1,5 +1,5 @@
-#ifndef DIJKSTRA_H
-#define DIJKSTRA_H
+#ifndef ALGORITHM_H
+#define ALGORITHM_H
 
 #include <string>
 #include <vector>
