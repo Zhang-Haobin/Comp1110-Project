@@ -1,6 +1,7 @@
 *.exe
 *.out
 *.o
+/main
 *.docx
 .DS_Store
 other

@@ -53,9 +53,9 @@ Makefile
 2. How to Compile
 -----------------
 
-Open a terminal in this folder:
+Open a terminal in the repository root folder:
 
-    Comp1110-Project/Comp1110-Project
+    Comp1110-Project
 
 Then run:
 
