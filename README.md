@@ -37,7 +37,7 @@ TransportNetwork.h / TransportNetwork.cpp
     Store the transport network as an adjacency list. They also provide the
     built-in sample map and the file-loading function.
 
-dijkstra.h / dijkstra.cpp
+Algorithm.h / Algorithm.cpp
     Contain route-search logic, candidate journey generation, route ranking,
     and Dijkstra's algorithm for fastest or cheapest reference paths.
 
@@ -153,9 +153,17 @@ Option 5: Load network from custom file
     The program treats each line as a bidirectional route segment. This means
     the route can be used in both directions.
 
-    To load the included sample file, enter:
+    To load the included Hong Kong sample network, enter:
 
         sample_network.txt
+
+    To load the included Shenzhen test network, enter:
+
+        shenzhen.txt
+
+    The Shenzhen file is provided to test the extensibility of the program.
+    After loading shenzhen.txt, the system will use the Shenzhen-based network
+    for route queries instead of the default Hong Kong network.
 
     If you run the program from another folder, enter the full or relative path
     to the file instead.
