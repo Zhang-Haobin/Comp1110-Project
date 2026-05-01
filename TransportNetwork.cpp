@@ -24,6 +24,33 @@ std::string buildSegmentKey(const std::string& stop1, const std::string& stop2,
     return stop1 + "|" + stop2 + "|" + mode + "|" + std::to_string(duration) + "|" +
            std::to_string(cost);
 }
+
+bool hasPathSeparator(const std::string& filename) {
+    return filename.find('/') != std::string::npos || filename.find('\\') != std::string::npos;
+}
+
+bool openNetworkFile(const std::string& filename, std::ifstream& input) {
+    input.open(filename);
+    if (input.is_open()) {
+        return true;
+    }
+
+    if (hasPathSeparator(filename)) {
+        return false;
+    }
+
+    std::string prefix = "../";
+    for (int depth = 0; depth < 4; ++depth) {
+        input.clear();
+        input.open(prefix + filename);
+        if (input.is_open()) {
+            return true;
+        }
+        prefix += "../";
+    }
+
+    return false;
+}
 }
 
 void TransportNetwork::addBidirectionalSegment(const std::string& stop1, const std::string& stop2,
@@ -81,8 +108,8 @@ void TransportNetwork::buildMap() {
 }
 
 bool TransportNetwork::loadFromFile(const std::string& filename, std::string* errorMessage) {
-    std::ifstream input(filename);
-    if (!input.is_open()) {
+    std::ifstream input;
+    if (!openNetworkFile(filename, input)) {
         if (errorMessage != nullptr) {
             *errorMessage = "Could not open file.";
         }
