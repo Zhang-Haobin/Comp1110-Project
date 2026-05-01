@@ -7,7 +7,7 @@ cost, number of route segments, and simple scenario settings.
 
 
 
-0. Enviroment
+0. Environment
 ----------------
 
 Programming language: C++
