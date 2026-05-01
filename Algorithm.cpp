@@ -8,6 +8,7 @@
 #include <unordered_map>
 
 namespace {
+// Priority-queue item for Dijkstra; the smallest distance should be processed first.
 struct State {
     double distance;
     std::string station;
@@ -17,6 +18,7 @@ struct State {
     }
 };
 
+// Converts the current DFS step stack into a complete journey summary.
 PathResult buildPathResult(const std::vector<PathStep>& steps) {
     PathResult result = {false, {}, {}, 0, 0.0, 0};
     if (steps.empty()) {
@@ -37,6 +39,7 @@ PathResult buildPathResult(const std::vector<PathStep>& steps) {
     return result;
 }
 
+// Two journeys are duplicates if they visit the same stations using the same modes.
 bool sameRoute(const PathResult& left, const PathResult& right) {
     if (left.stations != right.stations) {
         return false;
@@ -68,6 +71,7 @@ PathResult dijkstra(const TransportNetwork& network, const std::string& start,
     std::unordered_map<std::string, std::string> previousStation;
     std::unordered_map<std::string, PathStep> previousStep;
 
+    // Distance means either total minutes or total cost, depending on the query.
     for (const std::string& station : network.getStations()) {
         dist[station] = std::numeric_limits<double>::infinity();
     }
@@ -90,6 +94,7 @@ PathResult dijkstra(const TransportNetwork& network, const std::string& start,
 
         const std::vector<Segment>& neighbors = network.getNeighbors(current.station);
         for (const Segment& segment : neighbors) {
+            // Select the edge weight according to the requested optimization goal.
             double weight = optimizeByTime ? static_cast<double>(segment.duration) : segment.cost;
             double newDistance = current.distance + weight;
 
@@ -116,6 +121,7 @@ PathResult dijkstra(const TransportNetwork& network, const std::string& start,
     std::vector<PathStep> reversedSteps;
     std::string current = destination;
 
+    // Walk backwards through the predecessor maps, then reverse into start-to-end order.
     reversedStations.push_back(current);
     while (current != start) {
         reversedSteps.push_back(previousStep[current]);
@@ -154,6 +160,7 @@ std::vector<PathResult> generateCandidateJourneys(const TransportNetwork& networ
     std::set<std::string> visited;
     visited.insert(start);
 
+    // DFS explores simple paths only; visited prevents cycles such as A -> B -> A.
     std::function<void(const std::string&, int)> dfs = [&](const std::string& current,
                                                            int depthLeft) {
         if (static_cast<int>(journeys.size()) >= maxJourneys) {
@@ -189,6 +196,7 @@ std::vector<PathResult> generateCandidateJourneys(const TransportNetwork& networ
                                     segment.cost});
             visited.insert(segment.destination);
             dfs(segment.destination, depthLeft - 1);
+            // Backtrack so the next branch starts from the previous partial route.
             visited.erase(segment.destination);
             currentSteps.pop_back();
 

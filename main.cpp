@@ -10,6 +10,7 @@
 #include "Algorithm.h"
 
 namespace {
+// Scenario mode reuses the same route-search code with predefined user stories.
 struct ScenarioDefinition {
     std::string title;
     std::string goal;
@@ -50,6 +51,7 @@ int readInt(const std::string& prompt) {
     while (true) {
         std::cout << prompt;
         if (std::cin >> value) {
+            // Clear the rest of the line so later getline calls read fresh input.
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return value;
         }
@@ -65,6 +67,7 @@ double readDouble(const std::string& prompt) {
     while (true) {
         std::cout << prompt;
         if (std::cin >> value) {
+            // Clear the rest of the line so later getline calls read fresh input.
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return value;
         }
@@ -146,6 +149,7 @@ int countStopsInRegion(const std::vector<std::string>& stations, const std::stri
 
 std::vector<std::string> collectTravelModes(const TransportNetwork& network) {
     std::set<std::string> modeSet;
+    // A set removes duplicates and keeps the output in a stable sorted order.
     for (const std::string& station : network.getStations()) {
         const std::vector<Segment>& neighbors = network.getNeighbors(station);
         for (const Segment& segment : neighbors) {
@@ -296,6 +300,7 @@ std::vector<PathResult> collectRankedJourneys(const TransportNetwork& network,
     std::vector<PathResult> journeys =
         generateCandidateJourneys(network, startStation, endStation, 7, 1000);
 
+    // Scenario mode can reuse this helper by applying an optional budget filter.
     if (useBudgetLimit) {
         journeys.erase(std::remove_if(journeys.begin(), journeys.end(),
                                       [budgetLimit](const PathResult& result) {
@@ -375,6 +380,7 @@ void queryJourneys(const TransportNetwork& network) {
 
     printTopJourneys(journeys);
 
+    // Dijkstra gives a single reference optimum for fastest/cheapest searches.
     if (mode == 1 || mode == 2) {
         bool optimizeByTime = (mode == 1);
         PathResult bestPath = dijkstra(network, startStation, endStation, optimizeByTime);
@@ -496,6 +502,7 @@ void runCustomBudgetQuery(const TransportNetwork& network) {
 }
 
 void runScenarioMode(const TransportNetwork& network) {
+    // These cases demonstrate the same graph with different route preferences.
     const std::vector<ScenarioDefinition> scenarios = {
         {"Budget commuter",
          "Find the fastest journey without spending more than a modest budget.",
@@ -567,6 +574,7 @@ int main() {
 
     printWelcome(network);
 
+    // Main command loop: each menu action returns here until the user exits.
     bool running = true;
     while (running) {
         printMainMenu();

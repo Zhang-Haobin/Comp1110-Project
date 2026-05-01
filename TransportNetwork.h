@@ -13,6 +13,8 @@ struct Segment {
     double cost;
 };
 
+// Stores the transport map as an adjacency list. Each stop maps to the
+// outgoing travel segments that can be used from that stop.
 class TransportNetwork {
 public:
     void addBidirectionalSegment(const std::string& stop1, const std::string& stop2,
@@ -30,6 +32,8 @@ public:
 
 private:
     std::unordered_map<std::string, std::vector<Segment>> adjList;
+    // Counts logical connections once, even though bidirectional routes are
+    // stored as two adjacency-list entries.
     std::size_t logicalSegmentCount = 0;
 };
 

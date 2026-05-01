@@ -23,15 +23,18 @@ struct PathResult {
     int segmentCount;
 };
 
+// Finds the single best path by either total time or total cost.
 PathResult dijkstra(const TransportNetwork& network, const std::string& start,
                     const std::string& destination, bool optimizeByTime);
 
+// Enumerates simple candidate journeys up to the given search limits.
 std::vector<PathResult> generateCandidateJourneys(const TransportNetwork& network,
                                                   const std::string& start,
                                                   const std::string& destination,
                                                   int maxSegments,
                                                   int maxJourneys);
 
+// Sorts journeys using the user's preference, with sensible tie breakers.
 void rankJourneys(std::vector<PathResult>& journeys, int preferenceMode);
 
 #endif

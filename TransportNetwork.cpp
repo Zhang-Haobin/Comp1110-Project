@@ -15,6 +15,7 @@ std::string trim(const std::string& text) {
     return text.substr(start, end - start + 1);
 }
 
+// Creates an order-independent key so duplicate bidirectional segments can be detected.
 std::string buildSegmentKey(const std::string& stop1, const std::string& stop2,
                             const std::string& mode, int duration, double cost) {
     if (stop2 < stop1) {
@@ -29,6 +30,7 @@ bool hasPathSeparator(const std::string& filename) {
     return filename.find('/') != std::string::npos || filename.find('\\') != std::string::npos;
 }
 
+// Allows users to enter either an explicit path or a nearby data filename.
 bool openNetworkFile(const std::string& filename, std::ifstream& input) {
     input.open(filename);
     if (input.is_open()) {
@@ -77,6 +79,7 @@ void TransportNetwork::clear() {
 void TransportNetwork::buildMap() {
     clear();
 
+    // Built-in sample map used when no custom network file is loaded.
     addBidirectionalSegment("Sham Shui Po", "Mong Kok", "MTR", 4, 4.8);
     addBidirectionalSegment("Sham Shui Po", "Mong Kok", "Walk", 20, 0.0);
 
@@ -123,6 +126,8 @@ bool TransportNetwork::loadFromFile(const std::string& filename, std::string* er
     int lineNumber = 0;
     std::vector<std::string> issues;
 
+    // Parse each non-comment line as: stop1,stop2,mode,duration,cost.
+    // Invalid lines are skipped so valid parts of the file can still load.
     while (std::getline(input, line)) {
         ++lineNumber;
         line = trim(line);
@@ -158,6 +163,7 @@ bool TransportNetwork::loadFromFile(const std::string& filename, std::string* er
             continue;
         }
 
+        // Trim every CSV field so "A, B, MTR, 5, 4.5" works as expected.
         stop1 = trim(stop1);
         stop2 = trim(stop2);
         mode = trim(mode);
@@ -179,6 +185,7 @@ bool TransportNetwork::loadFromFile(const std::string& filename, std::string* er
         int duration = 0;
         double cost = 0.0;
         try {
+            // stoi/stod also reject text that cannot be converted to a number.
             duration = std::stoi(durationText);
             cost = std::stod(costText);
         } catch (...) {
@@ -207,6 +214,7 @@ bool TransportNetwork::loadFromFile(const std::string& filename, std::string* er
         }
         seenSegments.insert(segmentKey);
 
+        // File-defined routes are treated as bidirectional, matching the sample map.
         newAdjList[stop1].push_back({stop2, mode, duration, cost});
         newAdjList[stop2].push_back({stop1, mode, duration, cost});
         ++newLogicalSegmentCount;
