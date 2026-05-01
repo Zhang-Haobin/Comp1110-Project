@@ -29,11 +29,20 @@ void printRegionSeparator() {
     std::cout << "=======================\n";
 }
 
+std::string trim(const std::string& text) {
+    std::size_t start = text.find_first_not_of(" \t\r\n");
+    if (start == std::string::npos) {
+        return "";
+    }
+    std::size_t end = text.find_last_not_of(" \t\r\n");
+    return text.substr(start, end - start + 1);
+}
+
 std::string readLine(const std::string& prompt) {
     std::cout << prompt;
     std::string value;
     std::getline(std::cin, value);
-    return value;
+    return trim(value);
 }
 
 int readInt(const std::string& prompt) {
