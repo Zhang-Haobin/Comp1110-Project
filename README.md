@@ -55,7 +55,7 @@ Makefile
 
 Open a terminal in the repository root folder:
 
-    Comp1110-Project
+    Comp1110-Project-main
 
 Then run:
 
